@@ -7,9 +7,9 @@ s.reset_input_buffer()
 while (command := input("Enter Command: ")) != "quit":
     
     if (command == "off"):
-        s.write("off ")
+        s.write('off ')
     
     if (command == "on"):
-        s.write("on ")
+        s.write('on ')
     
     time.sleep(1)
