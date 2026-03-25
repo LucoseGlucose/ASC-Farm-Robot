@@ -33,6 +33,7 @@ bld/
 [Oo]ut/
 [Ll]og/
 [Ll]ogs/
+build
 
 # Build results on 'Bin' directories
 **/[Bb]in/*
@@ -416,5 +417,3 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
-build

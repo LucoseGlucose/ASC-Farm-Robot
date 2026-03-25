@@ -1,29 +1,24 @@
-#include <Servo.h>
-
-Servo servo = Servo();
 
 void setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
-    Serial.begin(9600);
-    servo.attach(9);
+    Serial.begin(115200);
 }
 
 void loop()
 {
-    digitalWrite(LED_BUILTIN, HIGH);
-    
-    for (int i = 0; i < 180; i++)
+    if (Serial.available())
     {
-        servo.write(i);
-        delay(5);
-    }
+        String command = Serial.readStringUntil('\0');
+        
+        if (command == "off")
+        {
+            digitalWrite(LED_BUILTIN, LOW);
+        }
 
-    digitalWrite(LED_BUILTIN, LOW);
-
-    for (int i = 180; i > 0; i--)
-    {
-        servo.write(i);
-        delay(5);
+        if (command == "on")
+        {
+            digitalWrite(LED_BUILTIN, HIGH);
+        }
     }
 }
