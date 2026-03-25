@@ -9,7 +9,7 @@ void loop()
 {
     if (Serial.available())
     {
-        String command = Serial.readStringUntil('\n');
+        String command = Serial.readStringUntil(' ');
         
         if (command == "off")
         {
