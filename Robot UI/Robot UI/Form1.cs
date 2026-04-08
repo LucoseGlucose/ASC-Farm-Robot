@@ -16,5 +16,16 @@ namespace Robot_UI
         {
 
         }
+
+        private void progressBar1_Click(object sender, EventArgs e)
+        {
+
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
