@@ -29,11 +29,17 @@
         private void InitializeComponent()
         {
             button1 = new Button();
+            progressBar1 = new ProgressBar();
+            numericUpDown1 = new NumericUpDown();
+            button2 = new Button();
+            button3 = new Button();
+            linkLabel1 = new LinkLabel();
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             SuspendLayout();
             // 
             // button1
             // 
-            button1.Location = new Point(133, 282);
+            button1.Location = new Point(12, 12);
             button1.Name = "button1";
             button1.Size = new Size(94, 29);
             button1.TabIndex = 0;
@@ -41,19 +47,71 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // progressBar1
+            // 
+            progressBar1.Location = new Point(12, 58);
+            progressBar1.Name = "progressBar1";
+            progressBar1.Size = new Size(125, 29);
+            progressBar1.TabIndex = 1;
+            // 
+            // numericUpDown1
+            // 
+            numericUpDown1.Location = new Point(12, 106);
+            numericUpDown1.Name = "numericUpDown1";
+            numericUpDown1.Size = new Size(125, 27);
+            numericUpDown1.TabIndex = 2;
+            // 
+            // button2
+            // 
+            button2.Location = new Point(112, 12);
+            button2.Name = "button2";
+            button2.Size = new Size(94, 29);
+            button2.TabIndex = 3;
+            button2.Text = "button2";
+            button2.UseVisualStyleBackColor = true;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(212, 12);
+            button3.Name = "button3";
+            button3.Size = new Size(94, 29);
+            button3.TabIndex = 4;
+            button3.Text = "button3";
+            button3.UseVisualStyleBackColor = true;
+            // 
+            // linkLabel1
+            // 
+            linkLabel1.AutoSize = true;
+            linkLabel1.Location = new Point(311, 322);
+            linkLabel1.Name = "linkLabel1";
+            linkLabel1.Size = new Size(0, 20);
+            linkLabel1.TabIndex = 5;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(800, 450);
+            ClientSize = new Size(967, 450);
+            Controls.Add(linkLabel1);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(numericUpDown1);
+            Controls.Add(progressBar1);
             Controls.Add(button1);
             Name = "Form1";
             Text = "Form1";
+            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
             ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion
 
         private Button button1;
+        private ProgressBar progressBar1;
+        private NumericUpDown numericUpDown1;
+        private Button button2;
+        private Button button3;
+        private LinkLabel linkLabel1;
     }
 }
