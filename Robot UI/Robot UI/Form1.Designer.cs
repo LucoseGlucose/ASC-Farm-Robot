@@ -41,6 +41,13 @@
             Back = new Button();
             Up = new Button();
             Down = new Button();
+            Status = new Button();
+            label1 = new Label();
+            label2 = new Label();
+            Run = new Button();
+            Status_Chklst = new CheckedListBox();
+            panel1 = new Panel();
+            label3 = new Label();
             ((System.ComponentModel.ISupportInitialize)MFRnum).BeginInit();
             SuspendLayout();
             // 
@@ -92,7 +99,7 @@
             // 
             // MVpb
             // 
-            MVpb.Location = new Point(12, 62);
+            MVpb.Location = new Point(12, 71);
             MVpb.Name = "MVpb";
             MVpb.Size = new Size(125, 234);
             MVpb.Style = ProgressBarStyle.Continuous;
@@ -166,11 +173,81 @@
             Down.UseVisualStyleBackColor = true;
             Down.Click += down_click;
             // 
+            // Status
+            // 
+            Status.Location = new Point(312, 12);
+            Status.Name = "Status";
+            Status.Size = new Size(94, 29);
+            Status.TabIndex = 13;
+            Status.Text = "Status";
+            Status.UseVisualStyleBackColor = true;
+            Status.Click += Status_Click;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(327, 122);
+            label1.Name = "label1";
+            label1.Size = new Size(74, 20);
+            label1.TabIndex = 14;
+            label1.Text = "Flow Rate";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(29, 48);
+            label2.Name = "label2";
+            label2.Size = new Size(91, 20);
+            label2.TabIndex = 15;
+            label2.Text = "Milk Volume";
+            // 
+            // Run
+            // 
+            Run.Location = new Point(26, 331);
+            Run.Name = "Run";
+            Run.Size = new Size(94, 29);
+            Run.TabIndex = 16;
+            Run.Text = "Run";
+            Run.UseVisualStyleBackColor = true;
+            // 
+            // Status_Chklst
+            // 
+            Status_Chklst.FormattingEnabled = true;
+            Status_Chklst.Location = new Point(675, 48);
+            Status_Chklst.Name = "Status_Chklst";
+            Status_Chklst.Size = new Size(141, 26);
+            Status_Chklst.TabIndex = 17;
+            // 
+            // panel1
+            // 
+            panel1.BackgroundImageLayout = ImageLayout.Stretch;
+            panel1.BorderStyle = BorderStyle.FixedSingle;
+            panel1.Location = new Point(351, 97);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(238, 234);
+            panel1.TabIndex = 18;
+            panel1.BackgroundImageLayoutChanged += panel1_BackgroundImageLayoutChanged;
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new Point(408, 66);
+            label3.Name = "label3";
+            label3.Size = new Size(126, 20);
+            label3.TabIndex = 19;
+            label3.Text = "XY Graph Position";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(967, 450);
+            Controls.Add(label3);
+            Controls.Add(Status_Chklst);
+            Controls.Add(Run);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(Status);
             Controls.Add(Down);
             Controls.Add(Up);
             Controls.Add(Back);
@@ -184,6 +261,7 @@
             Controls.Add(MFRnum);
             Controls.Add(MFRpb);
             Controls.Add(MIbt);
+            Controls.Add(panel1);
             Name = "Form1";
             Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)MFRnum).EndInit();
@@ -206,5 +284,12 @@
         private Button Back;
         private Button Up;
         private Button Down;
+        private Button Status;
+        private Label label1;
+        private Label label2;
+        private Button Run;
+        private CheckedListBox Status_Chklst;
+        private Panel panel1;
+        private Label label3;
     }
 }
