@@ -29,13 +29,19 @@
         private void InitializeComponent()
         {
             MIbt = new Button();
-            numericUpDown1 = new NumericUpDown();
+            MFRnum = new NumericUpDown();
             POTbt = new Button();
             CTRbt = new Button();
             linkLabel1 = new LinkLabel();
             MVpb = new VerticalProgressBar();
             MFRpb = new ProgressBar();
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
+            Forward = new Button();
+            Left = new Button();
+            Right = new Button();
+            Back = new Button();
+            Up = new Button();
+            Down = new Button();
+            ((System.ComponentModel.ISupportInitialize)MFRnum).BeginInit();
             SuspendLayout();
             // 
             // MIbt
@@ -46,14 +52,15 @@
             MIbt.TabIndex = 0;
             MIbt.Text = "Milk Intake";
             MIbt.UseVisualStyleBackColor = true;
-            MIbt.Click += button1_Click;
+            MIbt.Click += MIbt_Click;
             // 
-            // numericUpDown1
+            // MFRnum
             // 
-            numericUpDown1.Location = new Point(311, 198);
-            numericUpDown1.Name = "numericUpDown1";
-            numericUpDown1.Size = new Size(125, 27);
-            numericUpDown1.TabIndex = 2;
+            MFRnum.Location = new Point(311, 198);
+            MFRnum.Name = "MFRnum";
+            MFRnum.Size = new Size(125, 27);
+            MFRnum.TabIndex = 2;
+            MFRnum.ValueChanged += MFRnum_ValueChanged;
             // 
             // POTbt
             // 
@@ -73,7 +80,7 @@
             CTRbt.TabIndex = 4;
             CTRbt.Text = "Controls";
             CTRbt.UseVisualStyleBackColor = true;
-            CTRbt.Click += button3_Click;
+            CTRbt.Click += CTRbt_Click;
             // 
             // linkLabel1
             // 
@@ -98,23 +105,88 @@
             MFRpb.Size = new Size(361, 47);
             MFRpb.Style = ProgressBarStyle.Continuous;
             MFRpb.TabIndex = 1;
-            MFRpb.Click += progressBar1_Click;
+            // 
+            // Forward
+            // 
+            Forward.Location = new Point(698, 122);
+            Forward.Name = "Forward";
+            Forward.Size = new Size(94, 29);
+            Forward.TabIndex = 7;
+            Forward.Text = "Forward";
+            Forward.UseVisualStyleBackColor = true;
+            Forward.Click += fwrd_click;
+            // 
+            // Left
+            // 
+            Left.Location = new Point(637, 165);
+            Left.Name = "Left";
+            Left.Size = new Size(94, 29);
+            Left.TabIndex = 8;
+            Left.Text = "Left";
+            Left.UseVisualStyleBackColor = true;
+            Left.Click += left_click;
+            // 
+            // Right
+            // 
+            Right.Location = new Point(758, 165);
+            Right.Name = "Right";
+            Right.Size = new Size(94, 29);
+            Right.TabIndex = 9;
+            Right.Text = "Right";
+            Right.UseVisualStyleBackColor = true;
+            Right.Click += right_click;
+            // 
+            // Back
+            // 
+            Back.Location = new Point(698, 210);
+            Back.Name = "Back";
+            Back.Size = new Size(94, 29);
+            Back.TabIndex = 10;
+            Back.Text = "Back";
+            Back.UseVisualStyleBackColor = true;
+            Back.Click += back_click;
+            // 
+            // Up
+            // 
+            Up.Location = new Point(852, 62);
+            Up.Name = "Up";
+            Up.Size = new Size(94, 29);
+            Up.TabIndex = 11;
+            Up.Text = "Up";
+            Up.UseVisualStyleBackColor = true;
+            Up.Click += up_click;
+            // 
+            // Down
+            // 
+            Down.Location = new Point(852, 97);
+            Down.Name = "Down";
+            Down.Size = new Size(94, 29);
+            Down.TabIndex = 12;
+            Down.Text = "Down";
+            Down.UseVisualStyleBackColor = true;
+            Down.Click += down_click;
             // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(967, 450);
+            Controls.Add(Down);
+            Controls.Add(Up);
+            Controls.Add(Back);
+            Controls.Add(Right);
+            Controls.Add(Left);
+            Controls.Add(Forward);
             Controls.Add(MVpb);
             Controls.Add(linkLabel1);
             Controls.Add(CTRbt);
             Controls.Add(POTbt);
-            Controls.Add(numericUpDown1);
+            Controls.Add(MFRnum);
             Controls.Add(MFRpb);
             Controls.Add(MIbt);
             Name = "Form1";
             Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)numericUpDown1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)MFRnum).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -122,11 +194,17 @@
         #endregion
 
         private Button MIbt;
-        private NumericUpDown numericUpDown1;
+        private NumericUpDown MFRnum;
         private Button POTbt;
-        private Button CTRbt;
         private LinkLabel linkLabel1;
         private VerticalProgressBar MVpb;
         public ProgressBar MFRpb;
+        private Button CTRbt;
+        private Button Forward;
+        private Button Left;
+        private Button Right;
+        private Button Back;
+        private Button Up;
+        private Button Down;
     }
 }
