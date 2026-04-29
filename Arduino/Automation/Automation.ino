@@ -60,6 +60,7 @@ void loop()
 
             if (command != "")
             {
+                Serial.println(command);
                 char prefix = command[0];
                 
                 switch (prefix)

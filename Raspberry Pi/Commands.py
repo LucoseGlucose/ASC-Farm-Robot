@@ -2,9 +2,10 @@ import serial
 
 commandBaudRate = 19200
 commandTerminator = ';'
-commandSerial: serial.Serial
+commandSerial: serial.Serial = serial.Serial()
 
 def CommandsBegin():
+    global commandSerial
     commandSerial = serial.Serial("/dev/ttyACM0", commandBaudRate, timeout=1)
     commandSerial.reset_input_buffer()
 
