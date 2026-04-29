@@ -6,11 +6,19 @@ const int pinServoLowerArm = 24;
 const int pinServoPitch = 25;
 const int pinServoYaw = 26;
 
-const Servo servoUpperArm = Servo();
-const Servo servoArmjoint = Servo();
-const Servo servoLowerArm = Servo();
-const Servo servoPitch = Servo();
-const Servo servoYaw = Servo();
+const int pinServoEntranceGate = 27;
+const int pinServoExitGate = 28;
+
+extern Servo servoUpperArm;
+extern Servo servoArmjoint;
+extern Servo servoLowerArm;
+extern Servo servoPitch;
+extern Servo servoYaw;
+
+extern Servo servoEntranceGate;
+extern Servo servoExitGate;
 
 void MotorsBegin();
 void MotorsDetach();
+void MotorMove(Servo servo, int angle);
+void MotorMove(Servo servo, int angle, float time);

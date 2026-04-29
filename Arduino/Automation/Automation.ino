@@ -5,6 +5,8 @@
 const int pinEStop = 2;
 const int pinResetBtn = 4;
 
+const int gateOpenAngle = 15;
+
 enum class SystemState
 {
     STARTUP,
@@ -59,7 +61,15 @@ void loop()
             if (command != "")
             {
                 char prefix = command[0];
-                Serial.println(command.substring(1));
+                
+                switch (prefix)
+                {
+                case 'O':
+                    MotorMove(servoEntranceGate, gateOpenAngle, 1);
+                    delay(5000);
+                    MotorMove(servoEntranceGate, 90, 4);
+                    break;
+                }
             }
 
             String cowID = RFIDRead();
