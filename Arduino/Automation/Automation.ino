@@ -66,9 +66,9 @@ void loop()
                 switch (prefix)
                 {
                 case 'O':
-                    MotorMove(servoEntranceGate, gateOpenAngle, 1);
+                    MotorMove(servoEntranceGate, gateOpenAngle);
                     delay(5000);
-                    MotorMove(servoEntranceGate, 90, 4);
+                    MotorMove(servoEntranceGate, 90);
                     break;
                 }
             }
