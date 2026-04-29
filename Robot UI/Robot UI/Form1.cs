@@ -89,7 +89,7 @@ namespace Robot_UI
 
         private void fwrd_click(object sender, EventArgs e)
         {
-
+            MessageBox.Show(SerialData.port.ReadExisting());
         }
 
         private void left_click(object sender, EventArgs e)

@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO.Ports;
 using System.Text;
 
 namespace Robot_UI
 {
     public static class SerialData
     {
-        public static float Distance { get; private set; }
+        public static SerialPort port;
 
-        public static void ReceiveData()
+        public static void Begin()
         {
-            
+            port = new("COM3", 19200);
         }
     }
 }
