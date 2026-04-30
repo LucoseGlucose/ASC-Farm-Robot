@@ -7,6 +7,9 @@ namespace Robot_UI
         public Form1()
         {
             InitializeComponent();
+
+            SerialData.Begin();
+
             MVpb.Hide();
             MFRpb.Hide();
             MFRnum.Hide();
@@ -84,12 +87,12 @@ namespace Robot_UI
 
         private void MFRnum_ValueChanged(object sender, EventArgs e)
         {
-
+            
         }
 
         private void fwrd_click(object sender, EventArgs e)
         {
-            MessageBox.Show(SerialData.port.ReadExisting());
+            MessageBox.Show(SerialData.port!.ReadExisting());
         }
 
         private void left_click(object sender, EventArgs e)

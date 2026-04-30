@@ -10,19 +10,13 @@ void setup()
 
 void loop()
 {
-    unsigned int piToLaptopSize = serialFromPi.available();
-
-    if (piToLaptopSize > 0)
+    if (serialFromPi.available())
     {
-        String piToLaptop = serialFromPi.readString();
-        Serial.write(piToLaptop.c_str());
+        Serial.print(serialFromPi.readString());
     }
 
-    unsigned int laptopToPiSize = Serial.available();
-
-    if (laptopToPiSize > 0)
+    if (Serial.available())
     {
-        String laptopToPi = Serial.readString();
-        serialFromPi.write(laptopToPi.c_str());
+        serialFromPi.print(Serial.readString());
     }
 }

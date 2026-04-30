@@ -7,11 +7,13 @@ namespace Robot_UI
 {
     public static class SerialData
     {
-        public static SerialPort port;
+        public static SerialPort? port;
 
         public static void Begin()
         {
-            port = new("COM3", 19200);
+            port = new SerialPort("COM3", 19200);
+            port.Encoding = Encoding.UTF8;
+            port.Open();
         }
     }
 }
