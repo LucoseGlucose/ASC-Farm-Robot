@@ -11,15 +11,17 @@ class Visit:
     def __init__(self, cowID: str, time: datetime.datetime, milkVolume: float):
         self.cowID = cowID
         self.time = time
+        self.milkVolume = milkVolume
 
 visitList: collections.deque[Visit] = collections.deque[Visit]()
 minTimeBetweenMilks: datetime.timedelta = datetime.timedelta(hours=2)
+visitFile: pathlib.Path = pathlib.Path("/home/pi/ASC-Farm-Robot/Raspberry Pi/MilkingData.csv")
 
-def LoadVisits(filePath: pathlib.Path):
-    if not filePath.exists():
+def LoadVisits():
+    if not visitFile.exists():
         return
     
-    file = open(filePath, 'r', newline='')
+    file = open(visitFile, 'r', newline='')
     csvReader = csv.reader(file)
 
     global visitList
@@ -28,8 +30,8 @@ def LoadVisits(filePath: pathlib.Path):
 
     file.close()
 
-def SaveVisits(filePath: pathlib.Path):
-    file = open(filePath, 'w', newline='')
+def SaveVisits():
+    file = open(visitFile, 'w', newline='')
     csvWriter = csv.writer(file)
     
     global visitList

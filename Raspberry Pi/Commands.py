@@ -22,8 +22,11 @@ class SerialCommands:
         self.baudRate = baudRate
         self.terminator = terminator
         
-        self.serialPort = serial.Serial(portName, baudRate)
-        self.serialPort.reset_input_buffer()
+        try:
+            self.serialPort = serial.Serial(portName, baudRate)
+            self.serialPort.reset_input_buffer()
+        except:
+            pass
 
     def Read(self) -> str:
         if self.Available() < 1:
@@ -37,7 +40,7 @@ class SerialCommands:
         if len(command) < 1:
             return Command('', "", '')
         
-        return Command(command[0], command[1:len(command) - 2], command[len(command) - 1])
+        return Command(command[0], command[1:len(command) - 1], command[len(command) - 1])
 
     def Send(self, prefix: str, command: str):
         self.serialPort.write((prefix + command + self.terminator).encode())
