@@ -15,7 +15,7 @@ String CommandRead()
     return Serial.readStringUntil(commandTerminator);
 }
 
-void CommandSend(char prefix, String command)
+void CommandSend(String command)
 {
-    Serial.print(prefix + command + commandTerminator);
+    Serial.print(command + commandTerminator);
 }

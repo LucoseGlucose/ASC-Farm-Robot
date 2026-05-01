@@ -5,4 +5,4 @@ const char commandTerminator = ';';
 
 void CommandsBegin();
 String CommandRead();
-void CommandSend(char prefix, String command);
+void CommandSend(String command);

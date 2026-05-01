@@ -18,7 +18,7 @@ class SystemState(enum.IntEnum):
     EXITING = 7
     STOPPED = 8
 
-currentState: SystemState = SystemState.STARTUP
+currentState: SystemState = SystemState.STOPPED
 
 def SwitchState(newState: SystemState):
     global currentState
@@ -48,13 +48,13 @@ currentVisit: Visit | None = None
 
 while True:
     match currentState:
-        case SystemState.STOPPED: # pyright: ignore[reportUnnecessaryComparison]
+        case SystemState.STOPPED:
             command: Command = serialToArduino.ReadCommand()
             
             if command.prefix == 'U' and command.message == "STARTUP":
                 SwitchState(SystemState.STARTUP)
 
-        case SystemState.STARTUP:
+        case SystemState.STARTUP: # pyright: ignore[reportUnnecessaryComparison]
             command: Command = serialToArduino.ReadCommand()
             
             if command.prefix == 'U' and command.message == "IDLE":

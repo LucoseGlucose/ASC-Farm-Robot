@@ -17,7 +17,7 @@ enum class SystemState
     STOPPED,
 };
 
-volatile SystemState currentState = SystemState::STARTUP;
+volatile SystemState currentState = SystemState::STOPPED;
 
 void EmergencyStop()
 {
@@ -46,7 +46,7 @@ void loop()
             if (digitalRead(pinResetBtn) == LOW)
             {
                 currentState = SystemState::STARTUP;
-                CommandSend('U', "STARTUP");
+                CommandSend("USTARTUP");
             }
 
             break;
@@ -57,7 +57,7 @@ void loop()
             MotorsAttach();
             
             currentState = SystemState::IDLE;
-            CommandSend('U', "IDLE");
+            CommandSend("UIDLE");
             break;
         }
         case SystemState::IDLE:
@@ -66,7 +66,7 @@ void loop()
             
             if (cowID != "")
             {
-                CommandSend('R', cowID);
+                CommandSend("R" + cowID);
                 delay(250);
             }
 
@@ -79,6 +79,7 @@ void loop()
                 if (message == "ENTERING")
                 {
                     currentState = SystemState::ENTERING;
+                    motorEntranceGate.Move(motorEntranceGate.minAngle, 2.f);
                 }
             }
 
@@ -86,7 +87,7 @@ void loop()
         }
         case SystemState::ENTERING:
         {
-            motorEntranceGate.Move(motorEntranceGate.minAngle, 2.f);
+            
 
 
             break;
