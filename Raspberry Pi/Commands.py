@@ -33,7 +33,7 @@ class SerialCommands:
 
     def ReadCommand(self) -> Command:
         command: str = self.Read()
-        
+
         if len(command) < 1:
             return Command('', "", '')
         
