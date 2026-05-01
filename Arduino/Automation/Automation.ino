@@ -11,8 +11,11 @@ enum class SystemState
 {
     STARTUP,
     IDLE,
-    MOVING,
+    ENTERING,
+    PREPARING,
     MILKING,
+    CLEANING,
+    EXITING,
     STOPPED,
 };
 
@@ -28,6 +31,7 @@ void setup()
 {
     CommandsBegin();
     RFIDBegin();
+    MotorsBegin();
 
     pinMode(pinEStop, INPUT_PULLUP);
     pinMode(pinResetBtn, INPUT_PULLUP);
@@ -44,42 +48,47 @@ void loop()
             if (digitalRead(pinResetBtn) == LOW)
             {
                 currentState = SystemState::STARTUP;
+                CommandSend('U', "STARTUP");
             }
 
             break;
         }
         case SystemState::STARTUP:
         {
-            MotorsBegin();
+            MotorsAttach();
             currentState = SystemState::IDLE;
+            
+            CommandSend('U', "IDLE");
             break;
         }
         case SystemState::IDLE:
         {
-            String command = CommandRead();
-
-            if (command != "")
-            {
-                Serial.println(command);
-                char prefix = command[0];
-                
-                switch (prefix)
-                {
-                case 'O':
-                    MotorMove(servoEntranceGate, gateOpenAngle);
-                    delay(5000);
-                    MotorMove(servoEntranceGate, 90);
-                    break;
-                }
-            }
-
             String cowID = RFIDRead();
             
             if (cowID != "")
             {
-                CommandSend('C', cowID);
+                CommandSend('R', cowID);
+                delay(250);
             }
 
+            String command = CommandRead();
+
+            if (command != "" && command[0] == 'U')
+            {
+                String message = command.substring(1);
+
+                if (message == "ENTERING")
+                {
+                    currentState = SystemState::ENTERING;
+                }
+            }
+
+            break;
+        }
+        case SystemState::ENTERING:
+        {
+            
+            
             break;
         }
         default:

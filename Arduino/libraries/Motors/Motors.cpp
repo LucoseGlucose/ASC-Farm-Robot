@@ -13,6 +13,18 @@ Servo servoExitGate = Servo();
 
 void MotorsBegin()
 {
+    pinMode(pinServoUpperArm, OUTPUT);
+    pinMode(pinServoArmjoint, OUTPUT);
+    pinMode(pinServoLowerArm, OUTPUT);
+    pinMode(pinServoPitch, OUTPUT);
+    pinMode(pinServoYaw, OUTPUT);
+
+    pinMode(pinServoEntranceGate, OUTPUT);
+    pinMode(pinServoExitGate, OUTPUT);
+}
+
+void MotorsAttach()
+{
     servoUpperArm.attach(pinServoUpperArm);
     servoArmjoint.attach(pinServoArmjoint);
     servoLowerArm.attach(pinServoLowerArm);
@@ -43,6 +55,7 @@ void MotorMove(Servo servo, int angle)
 void MotorMove(Servo servo, int angle, float time)
 {
     int delta = angle - servo.read();
+    
     for (int i = servo.read(); i != angle; (delta > 0) ? i++ : i--)
     {
         servo.write(i);
