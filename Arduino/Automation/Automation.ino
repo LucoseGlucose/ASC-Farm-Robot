@@ -2,10 +2,8 @@
 #include "Motors.h"
 #include "Commands.h"
 
-const int pinEStop = 2;
-const int pinResetBtn = 4;
-
-const int gateOpenAngle = 15;
+const int pinEStop = 22;
+const int pinResetBtn = 23;
 
 enum class SystemState
 {
@@ -55,9 +53,10 @@ void loop()
         }
         case SystemState::STARTUP:
         {
+            MotorsHome();
             MotorsAttach();
-            currentState = SystemState::IDLE;
             
+            currentState = SystemState::IDLE;
             CommandSend('U', "IDLE");
             break;
         }
@@ -87,8 +86,9 @@ void loop()
         }
         case SystemState::ENTERING:
         {
-            
-            
+            motorEntranceGate.Move(motorEntranceGate.minAngle, 2.f);
+
+
             break;
         }
         default:

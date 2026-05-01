@@ -2,63 +2,110 @@
 
 #include <Arduino.h>
 
-Servo servoUpperArm = Servo();
-Servo servoArmjoint = Servo();
-Servo servoLowerArm = Servo();
-Servo servoPitch = Servo();
-Servo servoYaw = Servo();
+Motor motorUpperArm = Motor(7, 0, 90, 45);
+Motor motorArmJoint = Motor(6, 45, 90, 70);
+Motor motorLowerArm = Motor(5, 75, 160, 110);
+Motor motorWrist = Motor(4, 20, 140, 90);
+Motor motorEntranceGate = Motor(3, 10, 120, 115);
+Motor motorExitGate = Motor(2, 110, 180, 120);
+Motor motors[6] = { motorUpperArm, motorArmJoint, motorLowerArm, motorWrist, motorEntranceGate, motorExitGate };
 
-Servo servoEntranceGate = Servo();
-Servo servoExitGate = Servo();
+Motor::Motor(const int pin, const int minAngle, const int maxAngle, const int homeAngle)
+    : servo(), pin(pin), minAngle(minAngle), maxAngle(maxAngle), homeAngle(homeAngle)
+{
+    
+}
+
+void Motor::Setup()
+{
+    pinMode(pin, OUTPUT);
+}
+
+void Motor::Attach()
+{
+    servo.attach(pin);
+}
+
+void Motor::Detach()
+{
+    servo.detach();
+}
+
+void Motor::Home()
+{
+    Move(homeAngle);
+}
+
+void Motor::Move(int angle)
+{
+    if (angle < minAngle || angle > maxAngle)
+    {
+        return;
+    }
+
+    servo.write(angle);
+}
+
+void Motor::Move(int angle, float time)
+{
+    Move(servo.read(), angle, time);
+}
+
+void Motor::Move(int startAngle, int angle, float time)
+{
+    if (angle < minAngle || angle > maxAngle)
+    {
+        return;
+    }
+
+    servo.write(startAngle);
+
+    if (angle > startAngle)
+    {
+        for (int i = startAngle; i < angle; i++)
+        {
+            servo.write(i);
+            delay(1000 * time / (angle - startAngle));
+        }
+    }
+    else if (angle < startAngle)
+    {
+        for (int i = startAngle; i > angle; i--)
+        {
+            servo.write(i);
+            delay(1000 * time / (startAngle - angle));
+        }
+    }
+}
 
 void MotorsBegin()
 {
-    pinMode(pinServoUpperArm, OUTPUT);
-    pinMode(pinServoArmjoint, OUTPUT);
-    pinMode(pinServoLowerArm, OUTPUT);
-    pinMode(pinServoPitch, OUTPUT);
-    pinMode(pinServoYaw, OUTPUT);
-
-    pinMode(pinServoEntranceGate, OUTPUT);
-    pinMode(pinServoExitGate, OUTPUT);
+    for (int i = 0; i < 6; i++)
+    {
+        motors[i].Setup();
+    }
 }
 
 void MotorsAttach()
 {
-    servoUpperArm.attach(pinServoUpperArm);
-    servoArmjoint.attach(pinServoArmjoint);
-    servoLowerArm.attach(pinServoLowerArm);
-    servoPitch.attach(pinServoPitch);
-    servoYaw.attach(pinServoYaw);
-
-    servoEntranceGate.attach(pinServoEntranceGate);
-    servoExitGate.attach(pinServoExitGate);
+    for (int i = 0; i < 6; i++)
+    {
+        motors[i].Attach();
+    }
 }
 
 void MotorsDetach()
 {
-    servoUpperArm.detach();
-    servoArmjoint.detach();
-    servoLowerArm.detach();
-    servoPitch.detach();
-    servoYaw.detach();
-
-    servoEntranceGate.detach();
-    servoExitGate.detach();
-}
-
-void MotorMove(Servo servo, int angle)
-{
-    servo.write(angle);
-}
-
-void MotorMove(Servo servo, int angle, float time)
-{
-    int delta = angle - servo.read();
-    
-    for (int i = servo.read(); i != angle; (delta > 0) ? i++ : i--)
+    for (int i = 0; i < 6; i++)
     {
-        servo.write(i);
-        delay(1000 * time / delta);
+        motors[i].Detach();
+    }
+}
+
+void MotorsHome()
+{
+    for (int i = 0; i < 6; i++)
+    {
+        motors[i].Home();
     }
 }
