@@ -12,7 +12,9 @@ void loop()
 {
     if (serialFromPi.available())
     {
-        Serial.print(serialFromPi.readString());
+        Serial.print(serialFromPi.readUntil(';'));
+
+        if 
     }
 
     if (Serial.available())
