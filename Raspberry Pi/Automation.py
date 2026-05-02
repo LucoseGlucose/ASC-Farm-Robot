@@ -97,7 +97,7 @@ while True:
 
         case SystemState.PREPARING: # pyright: ignore[reportUnnecessaryComparison]
             commandData: Command = serialToArduino.ReadCommand()
-            if command.message != "":
+            if len(commandData.message) > 0:
                 print(commandData.FullMessage())
             
         case _:
