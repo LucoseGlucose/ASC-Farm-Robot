@@ -121,7 +121,7 @@ void loop()
                 motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UPREPARING");
-                MotorsMoveToPos(0, 2, 2, 10);
+                MotorsMoveToPos(1.5, 2, 1, 5);
             }
 
             break;
