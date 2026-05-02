@@ -114,13 +114,20 @@ void loop(){
         }
         if (str[0] == 'C'){
             for (int i = 0; i < str.length(); i++) {
-                
+                if (str.substring(i, i+1) == ",") {
+                    str_x = str.substring(1, i);
+                    str_y = str.substring(i+1);
+                    break;
+                }
             }
+            int x = str_x.toInt();
+            int y = str_y.toInt();
+            analogWrite(A4, x);
+            analogWrite(A5, y);
         }
     }
 
-    if (Serial.available())
-    {
+    if (Serial.available()){
         serialFromPi.print(Serial.readString());
 
     }
