@@ -2,11 +2,8 @@ import time
 import enum
 from Commands import SerialCommands
 from Commands import Command
-from Visit import Visit
-from Visit import visitList
-from Visit import minTimeBetweenMilks
-from Visit import LoadVisits
-from Visit import SaveVisits
+from Visits import Visit
+import Visits
 import datetime
 import gpiozero # pyright: ignore[reportMissingTypeStubs]
 
@@ -26,6 +23,7 @@ def SwitchState(newState: SystemState):
     global currentState
     currentState = newState
     serialToLaptop.Send('U', newState.name)
+    print("State changed to: " + newState.name)
 
 def EStop():
     SwitchState(SystemState.STOPPED)
@@ -37,19 +35,20 @@ serialToLaptop: SerialCommands = SerialCommands("/dev/ttyS0", 19200, ';')
 serialToArduino: SerialCommands = SerialCommands("/dev/ttyACM0", 19200, ';')
 
 while not serialToLaptop.serialPort.is_open:
-    print("Please connect laptop with serial")
+    print("Please connect laptop")
     serialToLaptop.serialPort.open()
     time.sleep(1)
 
 while not serialToArduino.serialPort.is_open:
-    serialToLaptop.Send('E', "Please connect laptop")
+    print("Please connect arduino")
     serialToArduino.serialPort.open()
     time.sleep(1)
 
-LoadVisits()
+Visits.LoadVisits()
 
 currentVisit: Visit | None = None
 serialToLaptop.Send('U', "Raspberry Pi Ready")
+print("Raspberry Pi Ready")
 
 while True:
     match currentState:
@@ -69,18 +68,16 @@ while True:
             command: Command = serialToArduino.ReadCommand()
 
             if command.prefix == 'R':
-                lastVisit: Visit = next((visit for visit in iter(visitList) if visit.cowID == command.message), Visit("", datetime.datetime.min, 0))
+                print(command.message)
+                lastVisit: Visit = next((visit for visit in iter(Visits.visitList) if visit.cowID == command.message), Visit("", datetime.datetime.min, 0))
                 
-                if lastVisit.time + minTimeBetweenMilks > datetime.datetime.now():
-                    serialToLaptop.Send('R', "Cow ID:" + command.message + " milking too soon")
+                if lastVisit.time + Visits.minTimeBetweenMilks > datetime.datetime.now():
+                    print('R', "Cow ID:" + command.message + " milking too soon")
                     serialToArduino.Send('U', "IDLE")
                     continue
                 
                 currentVisit = Visit(command.message, datetime.datetime.now(), 0)
                 serialToLaptop.Send('R', currentVisit.cowID)
-
-                visitList.appendleft(currentVisit)
-                SaveVisits()
                 
                 serialToArduino.Send('U', "ENTERING")
                 SwitchState(SystemState.ENTERING)
@@ -88,11 +85,19 @@ while True:
         case SystemState.ENTERING: # pyright: ignore[reportUnnecessaryComparison]
             command: Command = serialToArduino.ReadCommand()
 
-            if command.prefix == 'U' and command.message == "PREPARING":
-                SwitchState(SystemState.PREPARING)
+            if command.prefix == 'D':
+                print(command.message)
+
+            if command.prefix == 'U':
+                if command.message == "PREPARING":
+                    SwitchState(SystemState.PREPARING)
+                elif command.message == "IDLE":
+                    currentVisit = Visit("", datetime.datetime.min, 0)
+                    SwitchState(SystemState.IDLE)
 
         case SystemState.PREPARING: # pyright: ignore[reportUnnecessaryComparison]
-
+            commandData: Command = serialToArduino.ReadCommand()
+            print(commandData.FullMessage())
             pass
             
         case _:
