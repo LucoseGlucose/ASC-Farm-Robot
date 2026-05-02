@@ -1,6 +1,7 @@
 #include "RFID.h"
 #include "Motors.h"
 #include "Commands.h"
+#include "Distance.h"
 
 const int pinEStop = 22;
 const int pinResetBtn = 23;
@@ -87,9 +88,17 @@ void loop()
         }
         case SystemState::ENTERING:
         {
+            if (DistanceGetCm() < distanceWithCow)
+            {
+                if (DistanceGetCm() < distanceWithCow)
+                {
+                    currentState = SystemState::PREPARING;
+                    motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
+
+                    CommandSend("UPREPARING");
+                }
+            }
             
-
-
             break;
         }
         default:

@@ -26,6 +26,8 @@ extern Motor motorEntranceGate;
 extern Motor motorExitGate;
 extern Motor motors[6];
 
+const int pinMotorRelay = 49;
+
 void MotorsBegin();
 void MotorsAttach();
 void MotorsDetach();

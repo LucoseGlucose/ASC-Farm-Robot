@@ -80,6 +80,8 @@ void Motor::Move(int startAngle, int angle, float time)
 
 void MotorsBegin()
 {
+    pinMode(pinMotorRelay, OUTPUT);
+    
     for (int i = 0; i < 6; i++)
     {
         motors[i].Setup();
@@ -92,10 +94,14 @@ void MotorsAttach()
     {
         motors[i].Attach();
     }
+
+    digitalWrite(pinMotorRelay, HIGH);
 }
 
 void MotorsDetach()
 {
+    digitalWrite(pinMotorRelay, LOW);
+
     for (int i = 0; i < 6; i++)
     {
         motors[i].Detach();
