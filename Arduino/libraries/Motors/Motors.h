@@ -32,3 +32,4 @@ void MotorsBegin();
 void MotorsAttach();
 void MotorsDetach();
 void MotorsHome();
+void MotorsMoveToPos(float x, float y, float z, float time);

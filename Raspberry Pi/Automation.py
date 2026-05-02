@@ -91,6 +91,8 @@ while True:
             if command.prefix == 'U':
                 if command.message == "PREPARING":
                     SwitchState(SystemState.PREPARING)
+                    commandData: Command = serialToArduino.ReadCommand()
+                    print(command.FullMessage())
                 elif command.message == "IDLE":
                     currentVisit = Visit("", datetime.datetime.min, 0)
                     SwitchState(SystemState.IDLE)
