@@ -68,22 +68,25 @@ while True:
             command: Command = serialToArduino.ReadCommand()
 
             if command.prefix == 'R':
+                print(command.message)
                 lastVisit: Visit = next((visit for visit in iter(Visits.visitList) if visit.cowID == command.message), Visit("", datetime.datetime.min, 0))
                 
                 if lastVisit.time + Visits.minTimeBetweenMilks > datetime.datetime.now():
-                    serialToLaptop.Send('R', "Cow ID:" + command.message + " milking too soon")
+                    print('R', "Cow ID:" + command.message + " milking too soon")
                     serialToArduino.Send('U', "IDLE")
                     continue
                 
                 currentVisit = Visit(command.message, datetime.datetime.now(), 0)
                 serialToLaptop.Send('R', currentVisit.cowID)
-                print(currentVisit.cowID)
                 
                 serialToArduino.Send('U', "ENTERING")
                 SwitchState(SystemState.ENTERING)
 
         case SystemState.ENTERING: # pyright: ignore[reportUnnecessaryComparison]
             command: Command = serialToArduino.ReadCommand()
+
+            if command.prefix == 'D':
+                print(command.message)
 
             if command.prefix == 'U':
                 if command.message == "PREPARING":

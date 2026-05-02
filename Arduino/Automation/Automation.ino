@@ -99,17 +99,22 @@ void loop()
                 motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UIDLE");
+                break;
             }
             
-            int iterations = 5;
+            float iterations = 10;
             float totalDistance = 0.f;
             
             for (int i = 0; i < iterations; i++)
             {
                 totalDistance += DistanceGetCm();
+                delay(60);
             }
-            
-            if (totalDistance / (float)iterations < distanceWithCow)
+
+            float averageDistance = totalDistance / iterations;
+            CommandSend("D" + String(averageDistance));
+
+            if (averageDistance > 2.f && averageDistance < distanceWithCow)
             {
                 currentState = SystemState::PREPARING;
                 motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
