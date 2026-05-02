@@ -10,7 +10,7 @@ Servo servo;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(19200);
 }
 
 void loop()
@@ -35,7 +35,7 @@ void loop()
       
       Serial.print(angle);
       Serial.print(" angle accepted ");
-      Move(servo.read(), angle, 4.f);
+      Move(servo.read(), angle, 2.f);
     }
   }
 }

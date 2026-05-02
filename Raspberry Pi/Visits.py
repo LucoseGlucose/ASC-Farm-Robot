@@ -14,7 +14,7 @@ class Visit:
         self.milkVolume = milkVolume
 
 visitList: collections.deque[Visit] = collections.deque[Visit]()
-minTimeBetweenMilks: datetime.timedelta = datetime.timedelta(hours=2)
+minTimeBetweenMilks: datetime.timedelta = datetime.timedelta(minutes=1)
 visitFile: pathlib.Path = pathlib.Path("/home/pi/ASC-Farm-Robot/Raspberry Pi/MilkingData.csv")
 
 def LoadVisits():

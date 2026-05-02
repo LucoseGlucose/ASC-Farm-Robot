@@ -20,6 +20,9 @@ enum class SystemState
 
 volatile SystemState currentState = SystemState::STOPPED;
 
+unsigned long enterStartTimeMs = 0;
+unsigned long enterMaxDurationMs = 20 * 1000;
+
 void EmergencyStop()
 {
     currentState = SystemState::STOPPED;
@@ -79,8 +82,10 @@ void loop()
 
                 if (message == "ENTERING")
                 {
-                    currentState = SystemState::ENTERING;
                     motorEntranceGate.Move(motorEntranceGate.minAngle, 2.f);
+
+                    enterStartTimeMs = millis();
+                    currentState = SystemState::ENTERING;
                 }
             }
 
@@ -88,17 +93,30 @@ void loop()
         }
         case SystemState::ENTERING:
         {
-            if (DistanceGetCm() < distanceWithCow)
+            if (millis() - enterStartTimeMs  > enterMaxDurationMs)
             {
-                if (DistanceGetCm() < distanceWithCow)
-                {
-                    currentState = SystemState::PREPARING;
-                    motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
+                currentState = SystemState::IDLE;
+                motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
 
-                    CommandSend("UPREPARING");
-                }
+                CommandSend("UIDLE");
             }
             
+            int iterations = 5;
+            float totalDistance = 0.f;
+            
+            for (int i = 0; i < iterations; i++)
+            {
+                totalDistance += DistanceGetCm();
+            }
+            
+            if (totalDistance / (float)iterations < distanceWithCow)
+            {
+                currentState = SystemState::PREPARING;
+                motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
+
+                CommandSend("UPREPARING");
+            }
+
             break;
         }
         default:

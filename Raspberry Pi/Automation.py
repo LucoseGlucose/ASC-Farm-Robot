@@ -77,8 +77,7 @@ while True:
                 
                 currentVisit = Visit(command.message, datetime.datetime.now(), 0)
                 serialToLaptop.Send('R', currentVisit.cowID)
-
-                Visits.visitList.appendleft(currentVisit)
+                print(currentVisit.cowID)
                 
                 serialToArduino.Send('U', "ENTERING")
                 SwitchState(SystemState.ENTERING)
@@ -86,8 +85,12 @@ while True:
         case SystemState.ENTERING: # pyright: ignore[reportUnnecessaryComparison]
             command: Command = serialToArduino.ReadCommand()
 
-            if command.prefix == 'U' and command.message == "PREPARING":
-                SwitchState(SystemState.PREPARING)
+            if command.prefix == 'U':
+                if command.message == "PREPARING":
+                    SwitchState(SystemState.PREPARING)
+                elif command.message == "IDLE":
+                    currentVisit = Visit("", datetime.datetime.min, 0)
+                    SwitchState(SystemState.IDLE)
 
         case SystemState.PREPARING: # pyright: ignore[reportUnnecessaryComparison]
 
