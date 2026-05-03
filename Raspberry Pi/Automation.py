@@ -22,7 +22,7 @@ currentState: SystemState = SystemState.STOPPED
 def SwitchState(newState: SystemState):
     global currentState
     currentState = newState
-    serialToLaptop.Send('U', newState.name)
+    serialToLaptop.Send('U', str(newState.value))
     print("State changed to: " + newState.name)
 
 def EStop():
