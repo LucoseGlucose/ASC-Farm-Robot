@@ -67,7 +67,7 @@ while True:
                 SwitchState(SystemState.IDLE)
 
         case SystemState.IDLE:
-            serialToLaptop.Send('T', (datetime.datetime.now() - milkTime).seconds)
+            serialToLaptop.Send('T', str((datetime.datetime.now() - milkTime).seconds))
             
             command: Command = serialToArduino.ReadCommand()
 

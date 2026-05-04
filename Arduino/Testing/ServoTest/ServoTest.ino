@@ -30,26 +30,15 @@ void loop()
     }
     else if (msg.startsWith("start"))
     {
-      servo1.attach(7);
-      servo2.attach(6);
-      servo3.attach(5);
+      servo1.attach(2);
       Serial.println("Attached");
     }
     else
     {
-      int index1 = msg.indexOf(',');
-      float angle1 = msg.substring(0, index1).toFloat();
+      float angle1 = msg.toFloat();
 
-      msg = msg.substring(index1 + 1);
-      int index2 = msg.indexOf(',');
-      float angle2 = msg.substring(0, index2).toFloat();
-
-      float angle3 = msg.substring(index2 + 1).toFloat();
-
-      Serial.print(String(angle1) + ", " + String(angle2) + ", " + String(angle3));
-      servo1.writeMicroseconds(map(angle1, 0, 180, 544, 2400));
-      servo2.writeMicroseconds(map(angle2, 0, 180, 544, 2400));
-      servo3.writeMicroseconds(map(angle3, 0, 180, 544, 2400));
+      Serial.println(angle1);
+      servo1.write(angle1);
     }
   }
 }
