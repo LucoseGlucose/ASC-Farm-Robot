@@ -6,7 +6,9 @@
 // Gray gate closed is 115 open is 0
 // White gate closed is 120 open is 180
 
-Servo servo;
+Servo servo1;
+Servo servo2;
+Servo servo3;
 
 void setup()
 {
@@ -21,26 +23,38 @@ void loop()
 
     if (msg.startsWith("stop"))
     {
-      servo.detach();
+      servo1.detach();
+      servo2.detach();
+      servo3.detach();
       Serial.println("Detached");
     }
     else if (msg.startsWith("start"))
     {
-      servo.attach(7);
+      servo1.attach(7);
+      servo2.attach(6);
+      servo3.attach(5);
       Serial.println("Attached");
     }
     else
     {
-      int angle = msg.toInt();
-      
-      Serial.print(angle);
-      Serial.print(" angle accepted ");
-      Move(servo.read(), angle, 2.f);
+      int index1 = msg.indexOf(',');
+      int angle1 = msg.substring(0, index1).toInt();
+
+      msg = msg.substring(index1 + 1);
+      int index2 = msg.indexOf(',');
+      int angle2 = msg.substring(0, index2).toInt();
+
+      int angle3 = msg.substring(index2 + 1).toInt();
+
+      Serial.print(String(angle1) + ", " + String(angle2) + ", " + String(angle3));
+      servo1.write(angle1);
+      servo2.write(angle2);
+      servo3.write(angle3);
     }
   }
 }
 
-void Move(int startAngle, int angle, float time)
+void Move(Servo servo, int startAngle, int angle, float time)
 {
   servo.write(startAngle);
 

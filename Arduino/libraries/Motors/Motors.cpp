@@ -81,6 +81,7 @@ void Motor::Move(int startAngle, int angle, float time)
 
 void MotorsBegin()
 {
+    digitalWrite(pinMotorRelay, HIGH);
     pinMode(pinMotorRelay, OUTPUT);
     
     for (int i = 0; i < 6; i++)
@@ -91,7 +92,7 @@ void MotorsBegin()
 
 void MotorsAttach()
 {
-    digitalWrite(pinMotorRelay, HIGH);
+    digitalWrite(pinMotorRelay, LOW);
 
     for (int i = 5; i > -1; i--)
     {
@@ -102,7 +103,7 @@ void MotorsAttach()
 
 void MotorsDetach()
 {
-    digitalWrite(pinMotorRelay, LOW);
+    digitalWrite(pinMotorRelay, HIGH);
 
     for (int i = 0; i < 6; i++)
     {
@@ -112,45 +113,8 @@ void MotorsDetach()
 
 void MotorsHome()
 {
-    for (int i = 0; i < 6; i++)
+    for (int i = 5; i > -1; i--)
     {
         motors[i].Home();
-    }
-}
-
-void MotorsMoveToPos(float x, float y, float z, float time)
-{
-    float y2 = y * y;
-    float zFromTop = z - 7.4;
-    float zFT2 = zFromTop * zFromTop;
-
-    float ua = asin((y2 + zFT2 + 8.79) / (12.32 * sqrtf(y2 + zFT2))) - atan2(7.4 - z, y) + radians(5.59);
-    float aj = acos((y2 + zFT2 - 67.11) / 66.53) + radians(11.87);
-    float la = asin(x / 4.36);
-    float w = PI * .5 - aj;
-
-    float yBottomFront = y - 1.5 * cos(aj + ua - PI * .5);
-    float yBottomBack = 7.4 - 6.16 * cos(ua) - 1.3 / cos(PI - aj + ua);
-
-    float servoAngleUA = degrees(ua) + 45;
-    float servoAngleAJ = degrees(aj) + 70;
-    float servoAngleLA = degrees(la) + 110;
-    float servoAngleW = degrees(w) + 90;
-
-    CommandSend(String(servoAngleUA) + " - " + String(servoAngleAJ) + " - " + String(servoAngleLA) + " - " + String(servoAngleW) + " - " + String(yBottomFront) + " - " + String(yBottomBack));
-
-    if (time < .01f)
-    {
-        motorUpperArm.Move(servoAngleUA);
-        motorArmJoint.Move(servoAngleAJ);
-        motorLowerArm.Move(servoAngleLA);
-        motorWrist.Move(servoAngleW);
-    }
-    else 
-    {
-        motorUpperArm.Move(servoAngleUA, time);
-        motorArmJoint.Move(servoAngleAJ, time);
-        motorLowerArm.Move(servoAngleLA, time);
-        motorWrist.Move(servoAngleW, time);
     }
 }
