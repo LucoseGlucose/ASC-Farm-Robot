@@ -2,6 +2,7 @@
 #include "Motors.h"
 #include "Commands.h"
 #include "Distance.h"
+#include "Arm.h"
 
 const int pinEStop = 22;
 const int pinResetBtn = 23;
@@ -121,7 +122,7 @@ void loop()
                 motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UPREPARING");
-                MotorsMoveToPos(0, 2, 2, 10);
+                ArmMoveAlongGround(.8f, 0, 35, 2.f);
             }
 
             break;

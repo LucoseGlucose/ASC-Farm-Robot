@@ -22,7 +22,7 @@ currentState: SystemState = SystemState.STOPPED
 def SwitchState(newState: SystemState):
     global currentState
     currentState = newState
-    serialToLaptop.Send('U', newState.name)
+    serialToLaptop.Send('U', str(newState.value))
     print("State changed to: " + newState.name)
 
 def EStop():
@@ -97,7 +97,7 @@ while True:
 
         case SystemState.PREPARING: # pyright: ignore[reportUnnecessaryComparison]
             commandData: Command = serialToArduino.ReadCommand()
-            if command.message != "":
+            if len(commandData.message) > 0:
                 print(commandData.FullMessage())
             
         case _:
