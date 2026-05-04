@@ -119,7 +119,7 @@ while True:
             
         case SystemState.MILKING:
             milkDuration: datetime.timedelta = datetime.datetime.now() - milkTime
-            serialToLaptop.Send('T', milkDuration.seconds)
+            serialToLaptop.Send('T', str(milkDuration.seconds))
             
             command: Command = serialToArduino.ReadCommand()
             if command.prefix == 'F':
