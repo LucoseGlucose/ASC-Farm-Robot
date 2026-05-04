@@ -47,7 +47,7 @@ while not serialToArduino.serialPort.is_open:
 Visits.LoadVisits()
 
 currentVisit: Visit | None = None
-milkTime: datetime.datetime
+milkTime: datetime.datetime = datetime.datetime.now()
 
 serialToLaptop.Send('U', "Raspberry Pi Ready")
 print("Raspberry Pi Ready")
@@ -111,9 +111,10 @@ while True:
 
             if command.prefix == 'D':
                 serialToLaptop.SendCommand(command)
+                print(command.message)
 
             if command.prefix == 'U' and command.message == "MILKING":
-                milkTime = datetime.datetime.now().time()
+                milkTime = datetime.datetime.now()
                 SwitchState(SystemState.MILKING)
             
         case SystemState.MILKING:
