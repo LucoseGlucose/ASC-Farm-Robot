@@ -1,10 +1,14 @@
+//Libraries and MACROES
 #include <SoftwareSerial.h>
+
 // DAQ Digital Input
 int PI0 = 8;
 int PI1 = 9;
 int PI2 = 10;
 int PI3 = 11;
 
+//Arduino OUTPUT
+int estop_out = 12;
 
 // DAQ Digital Outputs
 int estop = 4;
@@ -18,9 +22,11 @@ float dsensor = 0;
 String str;
 String str_x;
 String str_y;
+int n = 10;
 
 
 SoftwareSerial serialFromPi = SoftwareSerial(3, 2);
+
 
 void setup(){
     serialFromPi.begin(19200);
@@ -44,58 +50,121 @@ void loop(){
         str = Serial.readString();
         if(str[0] = 'U'){
             if (str[1] == '1'){
-                digitalWrite(PI0, HIGH);
+                digitalWrite(PI0, LOW);
                 digitalWrite(PI1, LOW);
                 digitalWrite(PI2, LOW);
                 digitalWrite(PI3, LOW);
             }
             if (str[1]== '2'){
-                digitalWrite(PI0, LOW);
-                digitalWrite(PI1, HIGH);
+                digitalWrite(PI0, HIGH);
+                digitalWrite(PI1, LOW);
                 digitalWrite(PI2, LOW);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '3'){
-                digitalWrite(PI0, HIGH);
+                digitalWrite(PI0, LOW);
                 digitalWrite(PI1, HIGH);
                 digitalWrite(PI2, LOW);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '4'){
-                digitalWrite(PI0, LOW);
-                digitalWrite(PI1, LOW);
-                digitalWrite(PI2, HIGH);
+                digitalWrite(PI0, HIGH);
+                digitalWrite(PI1, HIGH);
+                digitalWrite(PI2, LOW);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '5'){
-                digitalWrite(PI0, HIGH);
+                digitalWrite(PI0, LOW);
                 digitalWrite(PI1, LOW);
                 digitalWrite(PI2, HIGH);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '6'){
-                digitalWrite(PI0, LOW);
-                digitalWrite(PI1, HIGH);
+                digitalWrite(PI0, HIGH);
+                digitalWrite(PI1, LOW);
                 digitalWrite(PI2, HIGH);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '7'){
-                digitalWrite(PI0, HIGH);
+                digitalWrite(PI0, LOW);
                 digitalWrite(PI1, HIGH);
                 digitalWrite(PI2, HIGH);
                 digitalWrite(PI3, LOW);
             }
             if (str[1] == '8'){
-                digitalWrite(PI0, LOW);
-                digitalWrite(PI1, LOW);
-                digitalWrite(PI2, LOW);
-                digitalWrite(PI3, HIGH);
+                digitalWrite(PI0, HIGH);
+                digitalWrite(PI1, HIGH);
+                digitalWrite(PI2, HIGH);
+                digitalWrite(PI3, LOW);
             }
         }
         if (str[0] == 'R'){
-            String R = str.substring(1);
-            int IDnum = R.toInt();
-            analogWrite(A0, IDnum);
+            for (int l = 1; l <= 8; l++){
+                if(str[l] == '0'){
+                    analogWrite(A0, 0);
+                    delay(n);
+                }
+                if(str[l] == '1'){
+                    analogWrite(A0, 1);
+                    delay(n);
+                }
+                if(str[l] == '2'){
+                    analogWrite(A0, 2);
+                    delay(n);
+                }
+                if(str[l] == '3'){
+                    analogWrite(A0, 3);
+                    delay(n);
+                }
+                if(str[l] == '4'){
+                    analogWrite(A0, 4);
+                    delay(n);
+                }
+                if(str[l] == '5'){
+                    analogWrite(A0, 5);
+                    delay(n);
+                }
+                if(str[l] == '6'){
+                    analogWrite(A0, 6);
+                    delay(n);
+                }
+                if(str[l] == '7'){
+                    analogWrite(A0, 7);
+                    delay(n);
+                }
+                if(str[l] == '8'){
+                    analogWrite(A0, 8);
+                    delay(n);
+                }
+                if(str[l] == '9'){
+                    analogWrite(A0, 9);
+                    delay(n);
+                }
+                if(str[l] == 'A'){
+                    analogWrite(A0, 10);
+                    delay(n);
+                }
+                if(str[l] == 'B'){
+                    analogWrite(A0, 11);
+                    delay(n);
+                }
+                if(str[l] == 'C'){
+                    analogWrite(A0, 12);
+                    delay(n);
+                }
+                if(str[l] == 'D'){
+                    analogWrite(A0, 13);
+                    delay(n);
+                }
+                if(str[l] == 'E'){
+                    analogWrite(A0, 14);
+                    delay(n);
+                }
+                if(str[l] == 'F'){
+                    analogWrite(A0, 15);
+                    delay(n);
+                }
+            }
         }
         if (str[0] == 'F'){
             String F = str.substring(1);
@@ -125,10 +194,32 @@ void loop(){
             analogWrite(A4, x);
             analogWrite(A5, y);
         }
+        if (str[0] == 'G'){
+            if (str[1] == 'O'){
+                digitalWrite(PI0, LOW);
+                digitalWrite(PI1, LOW);
+                digitalWrite(PI2, LOW);
+                digitalWrite(PI3, HIGH);
+            }
+            if (str[0] == 'C'){
+                digitalWrite(PI0, HIGH);
+                digitalWrite(PI1, LOW);
+                digitalWrite(PI2, LOW);
+                digitalWrite(PI3, HIGH);
+            }
+        }
     }
 
     if (Serial.available()){
         serialFromPi.print(Serial.readString());
-
+        if (estop == HIGH){
+            digitalWrite(estop_out, LOW);
+        }
+        if (estop == LOW){
+            digitalWrite(estop_out, HIGH);
+        }
+        if (home == HIGH){
+            Serial.println("HHOME");
+        }
     }
 }
