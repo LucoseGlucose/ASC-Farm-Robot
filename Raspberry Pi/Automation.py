@@ -110,9 +110,22 @@ while True:
                 print(flow)
 
             if command.prefix == 'U' and command.message == "CLEANING":
+                Visits.visitList.appendleft(currentVisit)
+                Visits.SaveVisits()
+                currentVisit = Visit("", datetime.datetime.min, 0)
+                
                 SwitchState(SystemState.CLEANING)
                 print("Done Milking")
 
-            
+        case SystemState.CLEANING:
+            command: Command = serialToArduino.ReadCommand()
+            if command.prefix == 'U' and command.message == "EXITING":
+                SwitchState(SystemState.EXITING)
+
+        case SystemState.EXITING:
+            command: Command = serialToArduino.ReadCommand()
+            if command.prefix == 'U' and command.message == "IDLE":
+                SwitchState(SystemState.IDLE)
+
         case _:
             continue
