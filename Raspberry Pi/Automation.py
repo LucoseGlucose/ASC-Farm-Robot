@@ -47,6 +47,8 @@ while not serialToArduino.serialPort.is_open:
 Visits.LoadVisits()
 
 currentVisit: Visit | None = None
+milkTime: datetime.datetime
+
 serialToLaptop.Send('U', "Raspberry Pi Ready")
 print("Raspberry Pi Ready")
 
@@ -65,14 +67,19 @@ while True:
                 SwitchState(SystemState.IDLE)
 
         case SystemState.IDLE:
+            serialToLaptop.Send('T', (datetime.datetime.now() - milkTime).seconds)
+            
             command: Command = serialToArduino.ReadCommand()
+
+            if command.prefix == 'G':
+                serialToLaptop.SendCommand(command)
 
             if command.prefix == 'R':
                 print(command.message)
                 lastVisit: Visit = next((visit for visit in iter(Visits.visitList) if visit.cowID == command.message), Visit("", datetime.datetime.min, 0))
                 
                 if lastVisit.time + Visits.minTimeBetweenMilks > datetime.datetime.now():
-                    print('R', "Cow ID:" + command.message + " milking too soon")
+                    print("Cow ID:" + command.message + " milking too soon")
                     serialToArduino.Send('U', "IDLE")
                     continue
                 
@@ -85,8 +92,12 @@ while True:
         case SystemState.ENTERING:
             command: Command = serialToArduino.ReadCommand()
 
+            if command.prefix == 'G':
+                serialToLaptop.SendCommand(command)
+                
             if command.prefix == 'D':
                 print(command.message)
+                serialToLaptop.SendCommand(command)
 
             if command.prefix == 'U':
                 if command.message == "PREPARING":
@@ -97,10 +108,18 @@ while True:
 
         case SystemState.PREPARING:
             command: Command = serialToArduino.ReadCommand()
+
+            if command.prefix == 'D':
+                serialToLaptop.SendCommand(command)
+
             if command.prefix == 'U' and command.message == "MILKING":
+                milkTime = datetime.datetime.now().time()
                 SwitchState(SystemState.MILKING)
             
         case SystemState.MILKING:
+            milkDuration: datetime.timedelta = datetime.datetime.now() - milkTime
+            serialToLaptop.Send('T', milkDuration.seconds)
+            
             command: Command = serialToArduino.ReadCommand()
             if command.prefix == 'F':
                 flow: float = float(command.message)
@@ -112,7 +131,9 @@ while True:
             if command.prefix == 'U' and command.message == "CLEANING":
                 Visits.visitList.appendleft(currentVisit)
                 Visits.SaveVisits()
+                
                 currentVisit = Visit("", datetime.datetime.min, 0)
+                milkTime = datetime.datetime.now()
                 
                 SwitchState(SystemState.CLEANING)
                 print("Done Milking")
@@ -124,6 +145,10 @@ while True:
 
         case SystemState.EXITING:
             command: Command = serialToArduino.ReadCommand()
+
+            if command.prefix == 'G':
+                serialToLaptop.SendCommand(command)
+                
             if command.prefix == 'U' and command.message == "IDLE":
                 SwitchState(SystemState.IDLE)
 

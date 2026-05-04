@@ -103,6 +103,7 @@ void loop()
 
                 if (message == "ENTERING")
                 {
+                    CommandSend("G0O");
                     motorEntranceGate.Move(motorEntranceGate.homeAngle, motorEntranceGate.minAngle, 2.f);
 
                     enterStartTimeMs = millis();
@@ -116,9 +117,10 @@ void loop()
         {
             if (millis() - enterStartTimeMs  > enterMaxDurationMs)
             {
-                currentState = SystemState::IDLE;
+                CommandSend("G0C");
                 motorEntranceGate.Move(motorEntranceGate.minAngle, motorEntranceGate.homeAngle, 3.f);
-
+                
+                currentState = SystemState::IDLE;
                 CommandSend("UIDLE");
                 break;
             }
@@ -137,9 +139,10 @@ void loop()
 
             if (averageDistance > 2.f && averageDistance < distanceWithCow)
             {
-                currentState = SystemState::PREPARING;
+                CommandSend("G0C");
                 motorEntranceGate.Move(motorEntranceGate.minAngle, motorEntranceGate.homeAngle, 3.f);
-
+                
+                currentState = SystemState::PREPARING;
                 CommandSend("UPREPARING");
             }
 
@@ -163,9 +166,12 @@ void loop()
             for (float i = uaGroundEndAngle; i < 43; i += .5f)
             {
                 unsigned short distMm = LaserReadMm();
+                CommandSend("D" + String(distMm));
+                
                 if (distMm < laserMinDistanceMm)
                 {
                     unsigned short distCheckMm = LaserReadMm();
+                    CommandSend("D" + String(distCheckMm));
 
                     if (distCheckMm < laserMinDistanceMm)
                     {
@@ -220,6 +226,7 @@ void loop()
         }
         case SystemState::EXITING:
         {
+            CommandSend("G1O");
             motorExitGate.Move(motorExitGate.homeAngle, motorExitGate.maxAngle, 1.f);
 
             float iterations = 5;
@@ -237,6 +244,7 @@ void loop()
             if (averageDistance > 2.f && averageDistance > distanceWithCow)
             {
                 delay(2000);
+                CommandSend("G1C");
                 motorExitGate.Move(motorExitGate.maxAngle, motorExitGate.homeAngle, 3.f);
                 
                 currentState = SystemState::IDLE;
