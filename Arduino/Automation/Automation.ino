@@ -163,7 +163,7 @@ void loop()
             LaserStart();
             uaMilkAngle = 43;
 
-            for (float i = uaGroundEndAngle; i < 43; i += .5f)
+            for (float i = uaGroundEndAngle; i < 43; i += .2f)
             {
                 unsigned short distMm = LaserReadMm();
                 CommandSend("D" + String(distMm));
@@ -180,7 +180,7 @@ void loop()
                     }
                 }
 
-                ArmMoveVertical(milkXCoord, i, i + .5f, .5f);
+                ArmMoveVertical(milkXCoord, i, i + .2f, .5f);
             }
 
             digitalWrite(pinPumpFromCow, HIGH);
@@ -227,7 +227,7 @@ void loop()
         case SystemState::EXITING:
         {
             CommandSend("G1O");
-            motorExitGate.Move(motorExitGate.homeAngle, motorExitGate.maxAngle, 1.f);
+            motorExitGate.Move(motorExitGate.maxAngle);
 
             float iterations = 5;
             float totalDistance = 0.f;

@@ -8,7 +8,7 @@ Motor motorArmJoint = Motor(6, 45, 95, 95);
 Motor motorLowerArm = Motor(5, 75, 160, 110);
 Motor motorWrist = Motor(4, 20, 140, 90);
 Motor motorEntranceGate = Motor(3, 10, 120, 115);
-Motor motorExitGate = Motor(2, 90, 90, 170);
+Motor motorExitGate = Motor(2, 90, 170, 90);
 Motor motors[6] = { motorUpperArm, motorArmJoint, motorLowerArm, motorWrist, motorEntranceGate, motorExitGate };
 
 Motor::Motor(const int pin, const int minAngle, const int maxAngle, const int homeAngle)
