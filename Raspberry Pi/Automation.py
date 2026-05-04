@@ -5,7 +5,7 @@ from Commands import Command
 from Visits import Visit
 import Visits
 import datetime
-import gpiozero # pyright: ignore[reportMissingTypeStubs]
+import gpiozero
 
 class SystemState(enum.IntEnum):
     STARTUP = 1
@@ -58,13 +58,13 @@ while True:
             if command.prefix != '':
                 SwitchState(SystemState.STARTUP)
 
-        case SystemState.STARTUP: # pyright: ignore[reportUnnecessaryComparison]
+        case SystemState.STARTUP:
             command: Command = serialToArduino.ReadCommand()
             
             if command.prefix == 'U' and command.message == "IDLE":
                 SwitchState(SystemState.IDLE)
 
-        case SystemState.IDLE: # pyright: ignore[reportUnnecessaryComparison]
+        case SystemState.IDLE:
             command: Command = serialToArduino.ReadCommand()
 
             if command.prefix == 'R':
@@ -82,7 +82,7 @@ while True:
                 serialToArduino.Send('U', "ENTERING")
                 SwitchState(SystemState.ENTERING)
 
-        case SystemState.ENTERING: # pyright: ignore[reportUnnecessaryComparison]
+        case SystemState.ENTERING:
             command: Command = serialToArduino.ReadCommand()
 
             if command.prefix == 'D':
@@ -95,10 +95,24 @@ while True:
                     currentVisit = Visit("", datetime.datetime.min, 0)
                     SwitchState(SystemState.IDLE)
 
-        case SystemState.PREPARING: # pyright: ignore[reportUnnecessaryComparison]
-            commandData: Command = serialToArduino.ReadCommand()
-            if len(commandData.message) > 0:
-                print(commandData.FullMessage())
+        case SystemState.PREPARING:
+            command: Command = serialToArduino.ReadCommand()
+            if command.prefix == 'U' and command.message == "MILKING":
+                SwitchState(SystemState.MILKING)
+            
+        case SystemState.MILKING:
+            command: Command = serialToArduino.ReadCommand()
+            if command.prefix == 'F':
+                flow: float = float(command.message)
+                currentVisit.milkVolume += flow
+
+                serialToLaptop.SendCommand(command)
+                print(flow)
+
+            if command.prefix == 'U' and command.message == "CLEANING":
+                SwitchState(SystemState.CLEANING)
+                print("Done Milking")
+
             
         case _:
             continue

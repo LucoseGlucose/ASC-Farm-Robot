@@ -4,6 +4,9 @@
 #include "Distance.h"
 #include "Arm.h"
 
+#include <Wire.h>
+#include <VL53L0X.h>
+
 const int pinEStop = 22;
 const int pinResetBtn = 23;
 
@@ -24,10 +27,18 @@ volatile SystemState currentState = SystemState::STOPPED;
 unsigned long enterStartTimeMs = 0;
 unsigned long enterMaxDurationMs = 20 * 1000;
 
+float uaMilkAngle;
+VL53L0X laser;
+unsigned short milkDistanceMm = 100;
+
+const int pinPumpFromCow = 44;
+const int pinPumpToCow = 45;
+
 void EmergencyStop()
 {
     currentState = SystemState::STOPPED;
     MotorsDetach();
+    laser.stopContinuous();
 }
 
 void setup()
@@ -41,6 +52,10 @@ void setup()
     pinMode(pinResetBtn, INPUT_PULLUP);
 
     attachInterrupt(digitalPinToInterrupt(pinEStop), EmergencyStop, FALLING);
+
+    Wire.begin();
+    laser.setTimeout(500);
+    laser.init();
 }
 
 void loop()
@@ -122,25 +137,50 @@ void loop()
                 motorEntranceGate.Move(motorEntranceGate.minAngle, motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UPREPARING");
-
-                float uaGroundEndAngle = 40;
-                float minYCoord = 1.f;
-                ArmMoveHorizontal(minYCoord, motorUpperArm.homeAngle, uaGroundEndAngle, 2.f);
-                delay(200);
-
-                float uaUpEndAngle = 41;
-                float aj = ArmCalcAJFromYCoord(minYCoord, uaGroundEndAngle);
-                float x = ArmCalcXCoord(uaGroundEndAngle, aj);
-                
-                CommandSend(String(aj));
-                CommandSend(String(x));
-                ArmMoveVertical(x, uaGroundEndAngle, uaUpEndAngle, 2.f);
             }
 
             break;
         }
         case SystemState::PREPARING:
         {
+            float uaGroundEndAngle = 40;
+            float minYCoord = 1.f;
+            ArmMoveHorizontal(minYCoord, motorUpperArm.homeAngle, uaGroundEndAngle, 2.f);
+            delay(200);
+
+            float aj = ArmCalcAJFromYCoord(minYCoord, uaGroundEndAngle);
+            float x = ArmCalcXCoord(uaGroundEndAngle, aj);
+
+            CommandSend(String(aj));
+            CommandSend(String(x));
+
+            laser.startContinuous();
+            uaMilkAngle = 43;
+
+            for (float i = uaGroundEndAngle; i < 43; i += .5f)
+            {
+                unsigned short distMm = laser.readRangeContinuousMillimeters();
+                if (distMm < milkDistanceMm)
+                {
+                    uaMilkAngle = i;
+                    break;
+                }
+
+                ArmMoveVertical(x, i, i + .5f, .5f);
+            }
+
+            digitalWrite(pinPumpFromCow, HIGH);
+            digitalWrite(pinPumpToCow, HIGH);
+
+            currentState = SystemState::MILKING;
+            CommandSend("UMILKING");
+            
+            break;
+        }
+        case SystemState::MILKING:
+        {
+            
+            
             break;
         }
         default:

@@ -77,6 +77,7 @@ void ArmMoveVertical(float x, float startAngle, float endAngle, float time)
 
         float armJointAngle = ArmCalcAJFromXCoord(x, i);
         motorArmJoint.MovePrecise(armJointAngle);
+        motorWrist.MovePrecise(180 - i);
 
         CommandSend(String(i) + ", " + String(armJointAngle));
         delay(100.f * time / unsignedDelta);
