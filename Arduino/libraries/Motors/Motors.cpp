@@ -74,14 +74,15 @@ void Motor::MovePrecise(float angle)
 
 void Motor::MovePrecise(float startAngle, float angle, float time)
 {
-    float delta = angle - startAngle;
 
-    if (delta < .1f)
+    float delta = angle - startAngle;
+    float unsignedDelta = abs(delta);
+
+    if (unsignedDelta < .1f)
     {
         return;
     }
 
-    float unsignedDelta = abs(delta);
     int direction = delta / unsignedDelta;
 
     for (float i = startAngle; (int)(i * 10) != (int)(angle * 10); i += direction * .1f)

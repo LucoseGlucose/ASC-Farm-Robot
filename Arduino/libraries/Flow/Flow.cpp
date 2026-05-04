@@ -12,7 +12,12 @@ float FlowGetRateLpS()
     float tOn = pulseIn(pinFlowSensor, HIGH);
     float tOff = pulseIn(pinFlowSensor, LOW);
     float periodUs = tOn + tOff;
-    float freq = 1000000.0 / periodUs;
 
+    if (periodUs < .0001f)
+    {
+        return 0.f;
+    }
+    
+    float freq = 1000000.0 / periodUs;
     return (freq / 7.5f) / 60.f;
 }

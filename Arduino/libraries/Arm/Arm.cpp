@@ -32,26 +32,24 @@ void ArmMoveHorizontal(float y, float startAngle, float endAngle, float time)
     }
 
     motorUpperArm.Move(startAngle);
-    float delta = endAngle - startAngle;
 
-    if (delta < .1f)
+    float delta = endAngle - startAngle;
+    float unsignedDelta = abs(delta);
+
+    if (unsignedDelta < .1f)
     {
         return;
     }
 
-    float unsignedDelta = abs(delta);
     int direction = delta / unsignedDelta;
-    CommandSend(String(delta));
 
     for (float i = startAngle; (int)(i * 10) != (int)(endAngle * 10); i += .1f * direction)
     {
-        CommandSend(String(i));
         motorUpperArm.MovePrecise(i);
 
         float armJointAngle = ArmCalcAJFromYCoord(y, i);
         motorArmJoint.MovePrecise(armJointAngle);
 
-        CommandSend(String(i) + ", " + String(armJointAngle));
         delay(100.f * time / unsignedDelta);
     }
 }
@@ -59,27 +57,25 @@ void ArmMoveHorizontal(float y, float startAngle, float endAngle, float time)
 void ArmMoveVertical(float x, float startAngle, float endAngle, float time)
 {
     motorUpperArm.Move(startAngle);
-    float delta = endAngle - startAngle;
 
-    if (delta < .1f)
+    float delta = endAngle - startAngle;
+    float unsignedDelta = abs(delta);
+
+    if (unsignedDelta < .1f)
     {
         return;
     }
 
-    float unsignedDelta = abs(delta);
     int direction = delta / unsignedDelta;
-    CommandSend(String(delta));
 
     for (float i = startAngle; (int)(i * 10) != (int)(endAngle * 10); i += .1f * direction)
     {
-        CommandSend(String(i));
         motorUpperArm.MovePrecise(i);
 
         float armJointAngle = ArmCalcAJFromXCoord(x, i);
         motorArmJoint.MovePrecise(armJointAngle);
         motorWrist.MovePrecise(180 - i);
 
-        CommandSend(String(i) + ", " + String(armJointAngle));
         delay(100.f * time / unsignedDelta);
     }
 }

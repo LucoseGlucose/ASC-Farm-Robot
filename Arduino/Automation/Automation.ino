@@ -24,14 +24,14 @@ enum class SystemState
 volatile SystemState currentState = SystemState::STOPPED;
 
 unsigned long enterStartTimeMs = 0;
-unsigned long enterMaxDurationMs = 20 * 1000;
+unsigned long enterMaxDurationMs = 15 * 1000;
 
 const float minYCoord = 1.f;
 float uaMilkAngle;
 float milkXCoord;
 
 unsigned long milkStartTimeMs = 0;
-unsigned long milkMinDurationMs = 5 * 1000;
+unsigned long milkMinDurationMs = 10 * 1000;
 
 const int pinPumpFromCow = 44;
 const int pinPumpToCow = 45;
@@ -39,6 +39,9 @@ const int pinPumpToCow = 45;
 void EmergencyStop()
 {
     currentState = SystemState::STOPPED;
+
+    digitalWrite(pinPumpFromCow, LOW);
+    digitalWrite(pinPumpToCow, LOW);
 
     MotorsDetach();
     LaserStop();
@@ -162,8 +165,13 @@ void loop()
                 unsigned short distMm = LaserReadMm();
                 if (distMm < laserMinDistanceMm)
                 {
-                    uaMilkAngle = i;
-                    break;
+                    unsigned short distCheckMm = LaserReadMm();
+
+                    if (distCheckMm < laserMinDistanceMm)
+                    {
+                        uaMilkAngle = i;
+                        break;
+                    }
                 }
 
                 ArmMoveVertical(milkXCoord, i, i + .5f, .5f);
@@ -228,7 +236,8 @@ void loop()
 
             if (averageDistance > 2.f && averageDistance > distanceWithCow)
             {
-                motorEntranceGate.Move(motorEntranceGate.maxAngle, motorEntranceGate.homeAngle, 3.f);
+                delay(2000);
+                motorExitGate.Move(motorExitGate.maxAngle, motorExitGate.homeAngle, 3.f);
                 
                 currentState = SystemState::IDLE;
                 CommandSend("UIDLE");
