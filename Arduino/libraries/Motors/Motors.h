@@ -14,8 +14,9 @@ struct Motor
     void Detach();
     void Home();
     void Move(int angle);
-    void Move(int angle, float time);
     void Move(int startAngle, int angle, float time);
+    void MovePrecise(float angle);
+    void MovePrecise(float startAngle, float angle, float time);
 };
 
 extern Motor motorUpperArm;

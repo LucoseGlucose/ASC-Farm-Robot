@@ -38,40 +38,45 @@ void loop()
     else
     {
       int index1 = msg.indexOf(',');
-      int angle1 = msg.substring(0, index1).toInt();
+      float angle1 = msg.substring(0, index1).toFloat();
 
       msg = msg.substring(index1 + 1);
       int index2 = msg.indexOf(',');
-      int angle2 = msg.substring(0, index2).toInt();
+      float angle2 = msg.substring(0, index2).toFloat();
 
-      int angle3 = msg.substring(index2 + 1).toInt();
+      float angle3 = msg.substring(index2 + 1).toFloat();
 
       Serial.print(String(angle1) + ", " + String(angle2) + ", " + String(angle3));
-      servo1.write(angle1);
-      servo2.write(angle2);
-      servo3.write(angle3);
+      servo1.writeMicroseconds(map(angle1, 0, 180, 544, 2400));
+      servo2.writeMicroseconds(map(angle2, 0, 180, 544, 2400));
+      servo3.writeMicroseconds(map(angle3, 0, 180, 544, 2400));
     }
   }
 }
 
-void Move(Servo servo, int startAngle, int angle, float time)
+void Move(Servo servo, float startAngle, float angle, float time)
 {
-  servo.write(startAngle);
+  servo.writeMicroseconds(map(startAngle, 0, 180, 544, 2400));
+  
+  float delta = angle - startAngle;
 
-  if (angle > startAngle)
+  if (delta < .1f)
   {
-    for (int i = startAngle; i < angle; i++)
-    {
-      servo.write(i);
-      delay(1000 * time / (angle - startAngle));
-    }
+    return;
   }
-  else if (angle < startAngle)
+  
+  Serial.println(delta);
+  float unsignedDelta = abs(delta);
+  Serial.println(unsignedDelta);
+  int direction = delta / unsignedDelta;
+  Serial.println(direction);
+
+  for (float i = startAngle; i - angle < .05f; i += direction * .1f)
   {
-    for (int i = startAngle; i > angle; i--)
-    {
-      servo.write(i);
-      delay(1000 * time / (startAngle - angle));
-    }
+    Serial.println(i);
+    servo.writeMicroseconds(map(i, 0, 180, 544, 2400));
+    delay(100.f * time / unsignedDelta);
   }
+
+  Serial.println("Done");
 }

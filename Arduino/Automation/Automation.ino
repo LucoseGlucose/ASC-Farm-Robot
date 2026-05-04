@@ -84,7 +84,7 @@ void loop()
 
                 if (message == "ENTERING")
                 {
-                    motorEntranceGate.Move(motorEntranceGate.minAngle, 2.f);
+                    motorEntranceGate.Move(motorEntranceGate.homeAngle, motorEntranceGate.minAngle, 2.f);
 
                     enterStartTimeMs = millis();
                     currentState = SystemState::ENTERING;
@@ -98,7 +98,7 @@ void loop()
             if (millis() - enterStartTimeMs  > enterMaxDurationMs)
             {
                 currentState = SystemState::IDLE;
-                motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
+                motorEntranceGate.Move(motorEntranceGate.minAngle, motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UIDLE");
                 break;
@@ -119,10 +119,22 @@ void loop()
             if (averageDistance > 2.f && averageDistance < distanceWithCow)
             {
                 currentState = SystemState::PREPARING;
-                motorEntranceGate.Move(motorEntranceGate.homeAngle, 3.f);
+                motorEntranceGate.Move(motorEntranceGate.minAngle, motorEntranceGate.homeAngle, 3.f);
 
                 CommandSend("UPREPARING");
-                ArmMoveAlongGround(.8f, 0, 35, 2.f);
+
+                float uaGroundEndAngle = 40;
+                float minYCoord = 1.f;
+                ArmMoveHorizontal(minYCoord, motorUpperArm.homeAngle, uaGroundEndAngle, 2.f);
+                delay(200);
+
+                float uaUpEndAngle = 41;
+                float aj = ArmCalcAJFromYCoord(minYCoord, uaGroundEndAngle);
+                float x = ArmCalcXCoord(uaGroundEndAngle, aj);
+                
+                CommandSend(String(aj));
+                CommandSend(String(x));
+                ArmMoveVertical(x, uaGroundEndAngle, uaUpEndAngle, 2.f);
             }
 
             break;

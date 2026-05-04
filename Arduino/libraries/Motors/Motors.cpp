@@ -3,7 +3,7 @@
 #include <Arduino.h>
 #include "Commands.h"
 
-Motor motorUpperArm = Motor(7, 0, 90, 0);
+Motor motorUpperArm = Motor(7, 0, 60, 0);
 Motor motorArmJoint = Motor(6, 45, 95, 95);
 Motor motorLowerArm = Motor(5, 75, 160, 110);
 Motor motorWrist = Motor(4, 20, 140, 90);
@@ -47,35 +47,47 @@ void Motor::Move(int angle)
     servo.write(angle);
 }
 
-void Motor::Move(int angle, float time)
-{
-    Move(servo.read(), angle, time);
-}
-
 void Motor::Move(int startAngle, int angle, float time)
 {
-    if (angle < minAngle || angle > maxAngle)
+    Move(startAngle);
+    int delta = angle - startAngle;
+
+    if (delta == 0)
     {
         return;
     }
 
-    servo.write(startAngle);
+    int unsignedDelta = abs(delta);
+    int direction = delta / unsignedDelta;
 
-    if (angle > startAngle)
+    for (int i = startAngle; i != angle + direction; i += direction)
     {
-        for (int i = startAngle; i < angle; i++)
-        {
-            servo.write(i);
-            delay(1000 * time / (angle - startAngle));
-        }
+        Move(i);
+        delay(1000.f * time / unsignedDelta);
     }
-    else if (angle < startAngle)
+}
+
+void Motor::MovePrecise(float angle)
+{
+    servo.writeMicroseconds(map(angle, 0, 180, 544, 2400));
+}
+
+void Motor::MovePrecise(float startAngle, float angle, float time)
+{
+    float delta = angle - startAngle;
+
+    if (delta < .1f)
     {
-        for (int i = startAngle; i > angle; i--)
-        {
-            servo.write(i);
-            delay(1000 * time / (startAngle - angle));
-        }
+        return;
+    }
+
+    float unsignedDelta = abs(delta);
+    int direction = delta / unsignedDelta;
+
+    for (float i = startAngle; (int)(i * 10) != (int)(angle * 10); i += direction * .1f)
+    {
+        MovePrecise(i);
+        delay(100.f * time / unsignedDelta);
     }
 }
 
