@@ -6,6 +6,7 @@ from Visits import Visit
 import Visits
 import datetime
 import gpiozero
+import Camera
 
 class SystemState(enum.IntEnum):
     STARTUP = 1
@@ -26,6 +27,7 @@ def SwitchState(newState: SystemState):
     print("State changed to: " + newState.name)
 
 def EStop():
+    Camera.CameraStop()
     SwitchState(SystemState.STOPPED)
 
 estop: gpiozero.Button = gpiozero.Button(4)
@@ -101,6 +103,7 @@ while True:
 
             if command.prefix == 'U':
                 if command.message == "PREPARING":
+                    Camera.CameraBegin()
                     SwitchState(SystemState.PREPARING)
                 elif command.message == "IDLE":
                     currentVisit = Visit("", datetime.datetime.min, 0)
