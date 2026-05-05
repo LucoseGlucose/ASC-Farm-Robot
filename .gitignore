@@ -1,5 +1,5 @@
-/.vscode
-/build
-/.vs
+.vscode
+build
+.vs
 __pycache__
 .lgd*
